@@ -4,7 +4,7 @@ from torch import optim as optim
 from torch.utils.data import DataLoader
 import numpy as np
 from matplotlib import pyplot as plt
-
+from torchmetrics import Accuracy
 
 
 dev = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -52,10 +52,12 @@ def test_step(model: nn.Module, data: DataLoader, criterion: nn.Module):
             # epoch_error += loss.item()
   
 
+    accuracy = Accuracy(task='multiclass', num_classes=6)
     # y = Y.numpy()
     print(out.shape, Y.shape)
     
-    yhat = torch.argmax(out, dim=1)
+    acc = accuracy(out, Y)
+    print(acc)
 
 
 

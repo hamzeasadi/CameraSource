@@ -46,7 +46,7 @@ def main():
     # train_data, test_data = createds(dataset=dataset, batch_size=64)
     minerror = np.inf
     if args.train:
-        train(net=Net, train_loader=trainl, val_loader=testl, opt=opt, criterion=criteria, epochs=100, minerror=minerror, modelname=model_name)
+        train(net=Net, train_loader=trainl, val_loader=testl, opt=opt, criterion=criteria, epochs=args.epoch, minerror=minerror, modelname=model_name)
 
     if args.test:
         # model_name = f"source_0.pt"
