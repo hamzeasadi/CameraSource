@@ -47,6 +47,8 @@ def test_step(model: nn.Module, data: DataLoader, criterion: nn.Module):
     model.eval()
     with torch.no_grad():
         for i, (X, Y) in enumerate(data):
+            X = X.to(dev)
+            Y = Y.to(dev)
             out = model(X)
             # loss = criterion(out, Y)
             # epoch_error += loss.item()
