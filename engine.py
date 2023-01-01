@@ -57,8 +57,10 @@ def test_step(model: nn.Module, data: DataLoader, criterion: nn.Module):
     accuracy = Accuracy(task='multiclass', num_classes=6)
     # y = Y.numpy()
     print(out.shape, Y.shape)
+    print(Y)
+    print(out)
     
-    acc = accuracy(out, Y)
+    acc = accuracy(out.cpu().detach(), Y.cpu().detach())
     print(acc)
 
 
