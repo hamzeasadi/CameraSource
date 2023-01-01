@@ -8,6 +8,9 @@ sys.path.append(os.pardir)
 import conf as cfg
 
 
+dev = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+
 class ModelBase(nn.Module):
     def __init__(self, name, created_time):
         super(ModelBase, self).__init__()
@@ -57,8 +60,8 @@ class ConstConv(ModelBase):
 
 
     def coordinates(self):
-        x_coord = torch.zeros(size=(256, 256))
-        y_coord = torch.zeros(size=(256, 256))
+        x_coord = torch.zeros(size=(256, 256), device=dev)
+        y_coord = torch.zeros(size=(256, 256), device=dev)
         for i in range(256):
             x_coord[i, :] = i
             y_coord[:, i] = i
