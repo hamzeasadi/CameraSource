@@ -21,8 +21,8 @@ def createdb(dataset: Dataset, batch_size=256, train_percent=0.80):
 
     return train_loader, test_loader
 
-trainl = DataLoader(dataset=traindataset, batch_size=64, shuffle=True)
-vall, testl = createdb(dataset=testdataset, batch_size=64)
+trainl = DataLoader(dataset=traindataset, batch_size=256, shuffle=True)
+vall, testl = createdb(dataset=testdataset, batch_size=256)
 
 def main():
     # extract_patches(srcpath=cfg.paths['src_data'], trgpath=cfg.paths['images'])
