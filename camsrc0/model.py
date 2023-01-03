@@ -100,7 +100,7 @@ class ConstConv(ModelBase):
         self.normalize()
         noise = F.conv2d(x[:, 0:1, :, :], self.const_weight, padding='same')
         noisecoord = self.add_pos(res=noise, batch=x)
-        print(noisecoord.shape)
+        # print(noisecoord.shape)
         x = self.fx(noisecoord)
         return x 
 
@@ -116,7 +116,9 @@ def maxout(ks, stride, w):
 def main():
     x = torch.randn(size=[64, 3, 224, 224])
     model = ConstConv(lcnf=cfg.constlayer)
-    summary(model=model, input_size=[10, 3, 224, 224])
+    # summary(model=model, input_size=[10, 3, 224, 224])
+    out = model(x)
+    print(out.shape)
 
   
     # cout1 = cnnout(5, 1, 224)
