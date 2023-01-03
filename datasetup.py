@@ -11,7 +11,7 @@ t = transforms.Compose([transforms.ToTensor()])
 traindataset = ImageFolder(root=cfg.paths['train'], transform=t)
 testdataset = ImageFolder(root=cfg.paths['test'], transform=t)
 
-def createdb(dataset: Dataset, batch_size=64, train_percent=0.80):
+def createdb(dataset: Dataset, batch_size=256, train_percent=0.80):
     l = len(dataset)
     train_size = int(l*train_percent)
     test_size = l - train_size
