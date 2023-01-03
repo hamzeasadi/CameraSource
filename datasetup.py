@@ -17,7 +17,7 @@ def createdb(dataset: Dataset, batch_size=64, train_percent=0.80):
     test_size = l - train_size
     train, test = random_split(dataset=dataset, lengths=[train_size, test_size])
     train_loader = DataLoader(dataset=train, batch_size=batch_size)
-    test_loader = DataLoader(dataset=test, batch_size=10000)
+    test_loader = DataLoader(dataset=test, batch_size=batch_size)
 
     return train_loader, test_loader
 
