@@ -8,8 +8,11 @@ import argparse
 import torch
 from torch import nn as nn, optim as optim
 from torch.utils.data import DataLoader
+import os
 
 dev = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+os.environ["CUDA_VISIBLE_DEVICES"] = 2
 
 parser = argparse.ArgumentParser(prog='train.py', description='required flags and supplemtary parameters for training')
 parser.add_argument('--train', action=argparse.BooleanOptionalAction)
@@ -38,7 +41,7 @@ def main():
     model_name = f"residual_0.pt"
     keeptrack = KeepTrack(path=cfg.paths['model'])
     Net = model.ConstConv(lcnf=cfg.constlayer)
-    Net = nn.parallel.DataParallel(Net)
+    Net = nn.DataParallel(Net)
     Net.to(dev)
     opt = optim.Adam(params=Net.parameters(), lr=3e-4)
     # criteria = OrthoLoss()
