@@ -47,7 +47,7 @@ def main():
     minerror = np.inf
     # if False:
     if args.train:
-        train(net=Net, train_loader=trainl, val_loader=vall, opt=opt, criterion=criteria, epochs=1, minerror=minerror, modelname=model_name)
+        train(net=Net, train_loader=trainl, val_loader=vall, opt=opt, criterion=criteria, epochs=args.epoch, minerror=minerror, modelname=model_name)
 
     # if True:
     if args.test:
