@@ -45,31 +45,42 @@ def test_step(model: nn.Module, data: DataLoader, criterion: nn.Module):
     epoch_error = 0
     l = len(data)
     model.eval()
+    Y_true = torch.tensor([10])
+    Y_pred = torch.tensor([10])
     with torch.no_grad():
         for i, (X, Y) in enumerate(data):
             X = X.to(dev)
             Y = Y.to(dev)
             out = model(X)
+            yhat = torch.argmax(out, dim=1)
+            Y_true = torch.cat((Y_true, Y))
+            Y_pred = torch.cat((Y_pred, yhat))
             # loss = criterion(out, Y)
             # epoch_error += loss.item()
-  
+
 
     accuracy = Accuracy(task='multiclass', num_classes=6)
     # y = Y.numpy()
-    print(out.shape, Y.shape)
+    print(Y_pred.shape, Y_true.shape)
     # print(Y)
     # print(out)
     
     
-    acc = accuracy(out.cpu().detach(), Y.cpu().detach())
+    acc = accuracy(Y_pred.detach(), Y_true.detach())
     print(f"acc is {acc}")
 
-    yhat = torch.argmax(out, dim=1)
-    print(Y)
-    print(yhat)
+    # yhat = torch.argmax(out, dim=1)
+    # print(Y)
+    # print(yhat)
 
 def main():
-    pass
+    y = torch.tensor([1])
+    for i in range(10):
+        x = torch.randn(size=(5, 6))
+        yhat = torch.argmax(x, dim=1)
+        y = torch.cat((y, yhat))
+
+    print(y)
 
 
 

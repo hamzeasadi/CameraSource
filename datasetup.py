@@ -26,12 +26,8 @@ vall, testl = createdb(dataset=testdataset, batch_size=64)
 
 def main():
     # extract_patches(srcpath=cfg.paths['src_data'], trgpath=cfg.paths['images'])
-    X, Y = next(iter(trainl))
-    x0 = X[0].squeeze()
-    x = x0.numpy()
-    for i in range(3):
-        cv2.imshow('patch', x[i, :, :])
-        cv2.waitKey(0)
+    for X, Y in testl:
+        print(X.shape)
 
 if __name__ == '__main__':
     main()
