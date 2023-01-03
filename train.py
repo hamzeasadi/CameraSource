@@ -1,7 +1,7 @@
 import numpy as np
 from utils import KeepTrack
 import conf as cfg
-from datasetup import trainl, testl
+from datasetup import trainl, testl, vall
 from camsrc0 import model
 import engine
 import argparse
@@ -11,13 +11,13 @@ from torch.utils.data import DataLoader
 
 dev = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-# parser = argparse.ArgumentParser(prog='train.py', description='required flags and supplemtary parameters for training')
-# parser.add_argument('--train', action=argparse.BooleanOptionalAction)
-# parser.add_argument('--test', action=argparse.BooleanOptionalAction)
-# # parser.add_argument('--val', action=argparse.BooleanOptionalAction)
-# parser.add_argument('--epoch', '-e', type=int, required=False, metavar='epoch', default=1)
+parser = argparse.ArgumentParser(prog='train.py', description='required flags and supplemtary parameters for training')
+parser.add_argument('--train', action=argparse.BooleanOptionalAction)
+parser.add_argument('--test', action=argparse.BooleanOptionalAction)
+# parser.add_argument('--val', action=argparse.BooleanOptionalAction)
+parser.add_argument('--epoch', '-e', type=int, required=False, metavar='epoch', default=1)
 
-# args = parser.parse_args()
+args = parser.parse_args()
 
 
 def train(net, train_loader, val_loader, opt, criterion, epochs, minerror, modelname:str):
@@ -45,12 +45,12 @@ def main():
     # dataset = Datad(path=cfg.paths['trg_parch'])
     # train_data, test_data = createds(dataset=dataset, batch_size=64)
     minerror = np.inf
-    if False:
-    # if args.train:
-        train(net=Net, train_loader=trainl, val_loader=testl, opt=opt, criterion=criteria, epochs=1, minerror=minerror, modelname=model_name)
+    # if False:
+    if args.train:
+        train(net=Net, train_loader=trainl, val_loader=vall, opt=opt, criterion=criteria, epochs=1, minerror=minerror, modelname=model_name)
 
-    if True:
-    # if args.test:
+    # if True:
+    if args.test:
         # model_name = f"source_0.pt"
         state = keeptrack.load_ckp(fname=model_name)
         Net.load_state_dict(state['model'], strict=False)
