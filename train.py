@@ -38,7 +38,7 @@ def main():
     model_name = f"residual_0.pt"
     keeptrack = KeepTrack(path=cfg.paths['model'])
     Net = model.ConstConv(lcnf=cfg.constlayer)
-    Net = nn.DataParallel(Net)
+    Net = nn.parallel.DataParallel(Net)
     Net.to(dev)
     opt = optim.Adam(params=Net.parameters(), lr=3e-4)
     # criteria = OrthoLoss()
