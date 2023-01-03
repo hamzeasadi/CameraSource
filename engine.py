@@ -45,6 +45,7 @@ def test_step(model: nn.Module, data: DataLoader, criterion: nn.Module):
     epoch_error = 0
     l = len(data)
     model.eval()
+    model.to(dev)
     Y_true = torch.tensor([10])
     Y_pred = torch.tensor([10])
     with torch.no_grad():
