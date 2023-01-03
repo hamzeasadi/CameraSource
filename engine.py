@@ -46,8 +46,8 @@ def test_step(model: nn.Module, data: DataLoader, criterion: nn.Module):
     l = len(data)
     model.eval()
     model.to(dev)
-    Y_true = torch.tensor([10])
-    Y_pred = torch.tensor([10])
+    Y_true = torch.tensor([1])
+    Y_pred = torch.tensor([1])
     with torch.no_grad():
         for i, (X, Y) in enumerate(data):
             X = X.to(dev)
@@ -81,7 +81,7 @@ def main():
         yhat = torch.argmax(x, dim=1)
         y = torch.cat((y, yhat))
 
-    print(y)
+    
 
 
 
