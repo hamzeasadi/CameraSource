@@ -55,28 +55,14 @@ class ConstConv(ModelBase):
         self.register_parameter("const_weight", None)
         self.const_weight = nn.Parameter(torch.randn(size=[lcnf['outch'], 1, lcnf['ks'], lcnf['ks']]), requires_grad=True)
         self.fx = self.feat_ext()
-        self.coords = self.coordinates()
 
 
-
-    def coordinates(self):
-        x_coord = torch.zeros(size=(256, 256), device=dev)
-        y_coord = torch.zeros(size=(256, 256), device=dev)
-        for i in range(256):
-            x_coord[i, :] = i
-            y_coord[:, i] = i
-        x = 2*(x_coord/255) - 1
-        y = 2*(y_coord/255) - 1
-        x.unsqueeze_(dim=0)
-        y.unsqueeze_(dim=0)
-        z = torch.cat((x, y), dim=0)
-        # z.unsqueeze_(dim=0)
-        return z
-
-    def add_pos(self, batch):
+    def add_pos(self, res, batch):
         Z = []
-        for i in range(batch.shape[0]):
-            z = torch.cat((batch[i], self.coords))
+        for i in range(res.shape[0]):
+            residual = res[i, :, :, :]
+            coord = batch[i, 1:, :, :]
+            z = torch.cat((residual, coord), dim=0)
             Z.append(z.unsqueeze_(dim=0))
         return torch.cat(tensors=Z, dim=0)
 
@@ -90,16 +76,21 @@ class ConstConv(ModelBase):
 
     def feat_ext(self):
         layer = nn.Sequential(
-            nn.Conv2d(in_channels=self.lcnf['outch']+2, out_channels=96, kernel_size=7, stride=2), nn.BatchNorm2d(num_features=96),
+            nn.Conv2d(in_channels=self.lcnf['outch']+2, out_channels=96, kernel_size=5, stride=1), nn.BatchNorm2d(num_features=96),
             nn.Tanh(), nn.MaxPool2d(kernel_size=3, stride=2),
+
             nn.Conv2d(in_channels=96, out_channels=64, kernel_size=5, stride=1), nn.BatchNorm2d(num_features=64),
             nn.Tanh(), nn.MaxPool2d(kernel_size=3, stride=2),
-            nn.Conv2d(in_channels=64, out_channels=64, kernel_size=5, stride=1), nn.BatchNorm2d(num_features=64),
+
+            nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3, stride=1), nn.BatchNorm2d(num_features=64),
             nn.Tanh(), nn.MaxPool2d(kernel_size=3, stride=2),
+
             nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3, stride=1), nn.BatchNorm2d(num_features=128),
-            nn.Tanh(), nn.AvgPool2d(kernel_size=9, stride=2),
-            # nn.Conv2d(in_channels=128, out_channels=128, kernel_size=3, stride=1), nn.BatchNorm2d(num_features=128),
-            # nn.Tanh()#, nn.AvgPool2d(kernel_size=7, stride=2)
+            nn.Tanh(), nn.MaxPool2d(kernel_size=3, stride=2),
+
+            nn.Conv2d(in_channels=128, out_channels=128, kernel_size=3, stride=1), nn.BatchNorm2d(num_features=128),
+            nn.Tanh(), nn.AvgPool2d(kernel_size=8, stride=1),
+           
             nn.Flatten(), nn.Linear(in_features=128, out_features=6)
         )
 
@@ -107,37 +98,47 @@ class ConstConv(ModelBase):
 
     def forward(self, x):
         self.normalize()
-        noise = F.conv2d(x, self.const_weight, padding='same')
-        x = self.add_pos(noise)
-        x = self.fx(x)
+        noise = F.conv2d(x[:, 0:1, :, :], self.const_weight, padding='same')
+        noisecoord = self.add_pos(res=noise, batch=x)
+        print(noisecoord.shape)
+        x = self.fx(noisecoord)
         return x 
 
 
+def cnnout(ks, stride, w):
+    outsize = int((w-ks)/stride) + 1
+    return outsize
 
-
+def maxout(ks, stride, w):
+    outsize = int((w-ks)/stride) + 1
+    return outsize
 
 def main():
-    x = torch.randn(size=[15, 1, 256, 256])
+    x = torch.randn(size=[64, 3, 224, 224])
     model = ConstConv(lcnf=cfg.constlayer)
-    # summary(model, input_size=[1, 1, 256, 256])
-    out = model(x)
-    print(out.shape)
-    # x = torch.randn(size=(2, 20, 20))
-    # y = torch.randn(size=(5, 8, 20, 20))
-    # # z = torch.stack(tensors=(x, y), dim=1)
-    # Z = []
-    # for i in range(y.shape[0]):
-    #     # print(y[i].shape)
-    #     z = torch.cat(tensors=(y[i], x))
-    #     Z.append(z.unsqueeze_(dim=0))
+    summary(model=model, input_size=[10, 3, 224, 224])
 
-    # zz = torch.cat(tensors=Z, dim=0)
-    # print(zz.shape)
-    
+  
+    # cout1 = cnnout(5, 1, 224)
+    # mout1 = maxout(ks=3, stride=2, w=cout1)
 
+    # cout2 = cnnout(5, 1, mout1)
+    # mout2 = maxout(ks=3, stride=2, w=cout2)
 
-    # # print(z.shape)    
+    # cout3 = cnnout(3, 1, mout2)
+    # mout3 = maxout(ks=3, stride=2, w=cout3)
 
+    # cout4 = cnnout(3, 1, mout3)
+    # mout4 = maxout(ks=3, stride=2, w=cout4)
+
+    # cout5 = cnnout(3, 1, mout4)
+    # mout5 = maxout(ks=3, stride=2, w=cout5)
+
+    # print(f'cout1={cout1}, mout1={mout1}')
+    # print(f'cout2={cout2}, mout2={mout2}')
+    # print(f'cout3={cout3}, mout3={mout3}')
+    # print(f'cout4={cout4}, mout4={mout4}')
+    # print(f'cout5={cout5}, mout5={mout5}')
 
 if __name__ == '__main__':
     main()

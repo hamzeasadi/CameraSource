@@ -57,14 +57,16 @@ def test_step(model: nn.Module, data: DataLoader, criterion: nn.Module):
     accuracy = Accuracy(task='multiclass', num_classes=6)
     # y = Y.numpy()
     print(out.shape, Y.shape)
-    print(Y)
-    print(out)
+    # print(Y)
+    # print(out)
+    
     
     acc = accuracy(out.cpu().detach(), Y.cpu().detach())
-    print(acc)
+    print(f"acc is {acc}")
 
-
-
+    yhat = torch.argmax(out, dim=1)
+    print(Y)
+    print(yhat)
 
 def main():
     pass
