@@ -26,12 +26,12 @@ def bgr2graycoord(img):
     channelx = np.ones(shape=(h, w))
     for i in range(h):
         channelx[i, :] = i*channelx[i, :]
-    channelx = 255*(channelx/h) - 1
+    channelx = 2*(channelx/h) - 1
 
     channely = np.ones(shape=(h, w))
     for i in range(w):
         channely[:, i] = i*channely[:, i]
-    channely = 255*(channely/w) - 1
+    channely = 2*(channely/w) - 1
     
     img[:, :, 0] = grayimg
     img[:, :, 1] = channelx
