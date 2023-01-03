@@ -12,7 +12,7 @@ import os
 
 dev = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-os.environ["CUDA_VISIBLE_DEVICES"] = 2
+os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
 parser = argparse.ArgumentParser(prog='train.py', description='required flags and supplemtary parameters for training')
 parser.add_argument('--train', action=argparse.BooleanOptionalAction)
