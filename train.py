@@ -14,6 +14,7 @@ dev = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
+
 parser = argparse.ArgumentParser(prog='train.py', description='required flags and supplemtary parameters for training')
 parser.add_argument('--train', action=argparse.BooleanOptionalAction)
 parser.add_argument('--test', action=argparse.BooleanOptionalAction)
@@ -55,7 +56,7 @@ def main():
 
     # if True:
     if args.test:
-        model_name = f"residual_1.pt"
+        # model_name = f"residual_1.pt"
         state = keeptrack.load_ckp(fname=model_name)
         Net.load_state_dict(state['model'], strict=False)
         print(f"min error is {state['minerror']} which happen at epoch {state['epoch']}")
