@@ -67,7 +67,7 @@ def test_step(model: nn.Module, data: DataLoader, criterion: nn.Module):
     # print(out)
     
     
-    acc = accuracy(Y_pred.detach(), Y_true.detach())
+    acc = accuracy(Y_pred.cpu().detach(), Y_true.cpu().detach())
     print(f"acc is {acc}")
 
     # yhat = torch.argmax(out, dim=1)
