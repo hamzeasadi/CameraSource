@@ -39,7 +39,7 @@ def train(net, train_loader, val_loader, opt, criterion, epochs, minerror, model
 
 
 def main():
-    model_name = f"residual_1.pt"
+    model_name = f"res50_residual_0.pt"
     keeptrack = KeepTrack(path=cfg.paths['model'])
     Net = model.ConstConv(lcnf=cfg.constlayer)
     # Net = nn.DataParallel(Net)
@@ -52,7 +52,7 @@ def main():
     minerror = np.inf
     # if False:
     if args.train:
-        train(net=Net, train_loader=trainl, val_loader=vall, opt=opt, criterion=criteria, epochs=100, minerror=minerror, modelname=model_name)
+        train(net=Net, train_loader=trainl, val_loader=vall, opt=opt, criterion=criteria, epochs=args.epoch, minerror=minerror, modelname=model_name)
 
     # if True:
     if args.test:
