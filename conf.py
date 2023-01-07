@@ -18,14 +18,14 @@ paths = dict(
     train=os.path.join(root, 'data', 'images', 'train'), test=os.path.join(root, 'data', 'images', 'test')
 )
 
-constlayer = dict(ks=5, scale=1, outch=8)
+constlayer = dict(ks=5, scale=1, outch=3)
 
 def creatdir(path: str):
     try:
         os.makedirs(path)
     except Exception as e:
         print(f"{path} is already exist!!!!")
-        
+
     
 
 
